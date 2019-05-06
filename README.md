@@ -53,7 +53,7 @@ Use this function to get embedding vector from the same program
 
 (vggSKILClientSingleFaceApp) To add new faces, add images into a folder with the name of the person in resources\singleFaceDataset
 
-(vggSKILClientSingleFaceApp) To add new faces, add images into a folder with the name of the person in resources\facesDataset
+(vggSKILClientMultiFacesApp) To add new faces, add images into a folder with the name of the person in resources\facesDataset
 
 For example, resources\singleFaceDataset\john
 
