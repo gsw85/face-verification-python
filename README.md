@@ -19,12 +19,15 @@ Packages: dlib, keras, tensorflow / tensorflow-gpu, numpy, urllib, pandas
 
 ## Files and Folders
 vggSKILServerDeploymentNotebook.txt: 
+
 This is the file for SKIL Server model deployment. When this program to tested on SKIL 1.2.1, uploading json file to SKIL is facing problem. Hense the using of txt format. Each %pyspark separation in the txt file is a cell in SKIL Zeppelin Notebook
 
 vggSKILClientSingleFaceApp.py
+
 This is the client applicatioon for SKIL Client. It reaches out to SKIL endpoint for embedding vectors and compare with the database to find matching ids for the face. This only recognize the face with the biggest surface area (all the faces in the frame is still detected) 
 
 vggSKILClientMultiFacesApp.py
+
 Similar to above. However, this file detects and recognizes all faces in a frame. 
 
 ## How to run
