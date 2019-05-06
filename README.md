@@ -1,6 +1,6 @@
 # Face Verification / Recognition using SKIL endpoint and local machine
 
-# Overview 
+## Overview 
 
 Face Verification Using VGG Model and cosine similarity function for small amount of face images.
 
@@ -11,7 +11,7 @@ Use case overview written in English can be found here. https://drive.google.com
 
 Use case overview written in mandarin can be found here. https://drive.google.com/open?id=1uDmd3VtVmfL2_RqD51lPgv1fBF6N_CFXdIlwm-wmrHE
 
-# Deployment Environment 
-# Folders Overview
-# How to run
-# How to add new faces data 
+## Deployment Environment 
+## Folders Overview
+## How to run
+## How to add new faces data 
