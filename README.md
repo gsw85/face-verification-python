@@ -12,6 +12,12 @@ Use case overview written in English can be found here. https://drive.google.com
 Use case overview written in mandarin can be found here. https://drive.google.com/open?id=1uDmd3VtVmfL2_RqD51lPgv1fBF6N_CFXdIlwm-wmrHE
 
 ## Deployment Environment 
-## Folders Overview
+The program was developed and tested in windows environment. 
+Below are the version environment. 
+Python 3.7.2
+Packages: dlib, keras, tensorflow / tensorflow-gpu, numpy, urllib, pandas
+
+## Folders 
+
 ## How to run
 ## How to add new faces data 
