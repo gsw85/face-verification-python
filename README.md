@@ -13,6 +13,7 @@ Use case overview written in mandarin can be found here. https://drive.google.co
 
 ## Deployment Environment 
 The program was developed and tested in windows environment. 
+ 
 Below are the version environment. 
 Python 3.7.2
 Packages: dlib, keras, tensorflow / tensorflow-gpu, numpy, urllib, pandas
