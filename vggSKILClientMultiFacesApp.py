@@ -56,7 +56,8 @@ class VGGClientApp:
     inputImageHeight = -1
     inputImageWidth = -1
 
-    embeddingURL = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'#"http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
+    # "http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
+    embeddingURL = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'
     kerasModelPath = "resources\\vgg_face_weights.h5"
     imageDbPath = "resources\\facesDataset\\"
     embeddingDbPath = "resources\\facesEmbedding\\"
@@ -64,7 +65,7 @@ class VGGClientApp:
 
     faceFontType           = cv2.FONT_HERSHEY_SIMPLEX
     faceFontScale          = 0.8
-    faceFontColor          = (255,0,0)
+    faceFontColor          = (255, 0, 0)
     faceRectColor          = (0, 255, 0)
     faceRectThickness      = 2
 

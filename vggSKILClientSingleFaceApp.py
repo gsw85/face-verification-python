@@ -24,16 +24,16 @@ import sys
 import uuid
 
 
-#documentation
-#where to put the face image
-#how to capture input image
-#flip the image for front camera
-#system configuration
-#histEqualize
-#use this as template for documentation
+# Documentation
+# where to put the face image
+# how to capture input image
+# flip the image for front camera
+# system configuration
+# histEqualize
+# use this as template for documentation
 
-#get images of daily life. more emotions
-#faces looking down is better
+# get images of daily life. more emotions
+# faces looking down is better
 
 class VGGClientApp:
 
@@ -42,60 +42,58 @@ class VGGClientApp:
     imgCols = 224
     channels = 3
 
-    nameList = [] #name list
-    nameEmbedding = dict() #name and the list of embeddings
+    nameList = [] # name list
+    nameEmbedding = dict() # name and the list of embeddings
 
     SKILServerPassword = "admin123"
 
     padHeight = 50
     padwidth = 20
 
-    camera = 0 #default camera use 0
+    camera = 0 # default camera use 0
     inputImageHeight = -1
     inputImageWidth = -1
 
-    embeddingURL = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'#"http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
-    kerasModelPath = "resources\\vgg_face_weights.h5"
-    imageDbPath = "resources\\singleFaceDataset\\"
-    embeddingDbPath = "resources\\singleFaceEmbedding\\"
-    predictor_path = "resources\\shape_predictor_68_face_landmarks.dat"
-
-    faceFontType           = cv2.FONT_HERSHEY_SIMPLEX
-    faceFontScale          = 0.8
-    faceFontColor          = (255,0,0)
-    faceRectColor          = (0, 255, 0)
-    faceRectThickness      = 2
+    # "http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
+    embeddingURL      = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'
+    kerasModelPath    = "resources\\vgg_face_weights.h5"
+    imageDbPath       = "resources\\singleFaceDataset\\"
+    embeddingDbPath   = "resources\\singleFaceEmbedding\\"
+    predictor_path    = "resources\\shape_predictor_68_face_landmarks.dat"
+    
+    faceFontType      = cv2.FONT_HERSHEY_SIMPLEX
+    faceFontScale     = 0.8
+    faceFontColor     = (255, 0, 0)
+    faceRectColor     = (0, 255, 0)
+    faceRectThickness = 2
 
 
     def __init__(self, createDataBase = False):
 
-        #get Face Detector
+        # get Face Detector
         self.detector = dlib.get_frontal_face_detector()
 
-        #get FaceRecognizer local, to generate embeddings for database faces
-        #when createDataBase set to True
+        # get FaceRecognizer local, to generate embeddings for database faces
+        # when createDataBase set to True
         self.initDescriptor()
 
-        #to get upright face for better embedding generation
+        # to get upright face for better embedding generation
         self.landmark_predictor = dlib.shape_predictor(self.predictor_path)
 
-        #get Minimum Face Width for Face Verification
-        self.minimumFaceWidth = 50 #int(self.imgCols / 4)
+        # get Minimum Face Width for Face Verification
+        self.minimumFaceWidth = 50 # int(self.imgCols / 4)
 
         self.initCamera()
 
         if createDataBase == True:
-            #align each face from database, and save it
+            # align each face from database, and save it
             self.createDatabase()
 
         else:
-
             self.loadDatabase()
 
-        #get endpoint token
+        # get endpoint token
         self.getToken()
-
-
 
     def saveFaceForDatabase(self, mainPath):
 
@@ -103,7 +101,7 @@ class VGGClientApp:
 
         while True:
             name = input("What name is this new person>")
-            name = name.lower() #lower case a string
+            name = name.lower() # lower case a string
             if(len(name) > 0):
                 break
 
@@ -161,7 +159,7 @@ class VGGClientApp:
                     savePath = pathToSave + "\\" + str(uuid.uuid4()) + ".jpg"
 
                     det = rectList[faceRecogIndex]
-                    #[top, bottom, topleft, right] to [topleft, top, right, bottom]
+                    # [top, bottom, topleft, right] to [topleft, top, right, bottom]
                     cv2.rectangle(frame, (det[2], det[0]), (det[3], det[1]), self.faceRectColor, self.faceRectThickness)
                     cv2.putText(frame, "Collect Face: %d  left" % (maxFacesCapture - count), (10, 85), self.faceFontType, 0.95, (255, 0, 0))
                     cv2.imshow("Saving Image For Database", frame)
@@ -179,8 +177,8 @@ class VGGClientApp:
 
         cv2.destroyAllWindows()
 
-    #load all the embeddings of different faces in the rootPath
-    #the directory can only contain subdirs. each of a particular person
+    # load all the embeddings of different faces in the rootPath
+    # the directory can only contain subdirs. each of a particular person
     def createDatabase(self):
 
         print("Create embedding database ...")
@@ -204,7 +202,7 @@ class VGGClientApp:
         except:
            print('Error while deleting directory {}'.format(self.embeddingDbPath))
 
-        #create embedding path if not there
+        # create embedding path if not there
         if(os.path.exists(self.embeddingDbPath) == False):
             endIndex = int(len(self.embeddingDbPath) - 1)
             embeddingFolder = self.embeddingDbPath[0:endIndex]
@@ -213,14 +211,14 @@ class VGGClientApp:
 
         subDirs = [x[0] for x in os.walk(self.imageDbPath)]
 
-        subDirs.remove(self.imageDbPath) #remove own path
+        subDirs.remove(self.imageDbPath) # remove own path
 
         if len(subDirs) > 1:
              raise Exception("There should be one folder in {}.The folder name will be person name".format(self.imageDbPath))
 
         imagePath = [x[0] for x in os.walk(subDirs[0])][0]
 
-        #get name which the the title of the folder
+        # get name which the the title of the folder
         name = imagePath.split("\\")[-1]
 
         self.nameList.append(name)
@@ -236,7 +234,7 @@ class VGGClientApp:
             imageFullPath = imagePath + "\\" + image
 
             arr = self.createEmbeddingForDatabase(imageFullPath)
-            if arr is not None: #-1 for no face found
+            if arr is not None: # -1 for no face found
                 self.nameEmbedding[name].append(arr)
 
 
@@ -252,7 +250,7 @@ class VGGClientApp:
 
         files = os.listdir(self.embeddingDbPath)
 
-        #to prevent more than one face.txt in the same folder
+        # to prevent more than one face.txt in the same folder
         txtFileCount = 0
 
         for file in files:
@@ -272,11 +270,11 @@ class VGGClientApp:
     def createEmbeddingForDatabase(self, imagePath):
 
         img = cv2.imread(imagePath, 1)
-        #img = self.colorEqualizeHist(img)
+        # img = self.colorEqualizeHist(img)
 
-        #grayImg = load_img(imagePath, grayscale = True, target_size = (self.imgRows, self.imgCols))
+        # grayImg = load_img(imagePath, grayscale = True, target_size = (self.imgRows, self.imgCols))
 
-        dets = self.detector(img, 0) #img_to_array(img) second argument is for upscaling to detect smaller faces 0 for no upscaling
+        dets = self.detector(img, 0) # img_to_array(img) second argument is for upscaling to detect smaller faces 0 for no upscaling
 
         # Display the resulting frame
 
@@ -290,8 +288,8 @@ class VGGClientApp:
 
             face_aligned = dlib.get_face_chips(img, faces, size = self.imgRows)
 
-            #cv2.imwrite('temp\\facecrop' + str(self.count) + ".jpg", face_aligned[0])
-            #self.count = self.count + 1
+            # cv2.imwrite('temp\\facecrop' + str(self.count) + ".jpg", face_aligned[0])
+            # self.count = self.count + 1
 
             return self.getLocalMachineEmbedding(face_aligned[0])
 
@@ -318,7 +316,7 @@ class VGGClientApp:
 
     def getToken(self):
 
-        loginURL = "http://localhost:9008/login"#"http://localhost:9008/ui/#/login?returnUrl=%2Fworkspaces"
+        loginURL = "http://localhost:9008/login"# "http://localhost:9008/ui/# /login?returnUrl=%2Fworkspaces"
         headers = {"Content-Type":"application/json","Accept":"application/json"}
         payload = {
         'sysparm_action': 'insert',
@@ -390,10 +388,10 @@ class VGGClientApp:
         return embedding
 
     def preprocess_image(self, image):
-        #img = load_img(imagePath, target_size = (self.imgRows, self.imgCols))
+        # img = load_img(imagePath, target_size = (self.imgRows, self.imgCols))
         img = img_to_array(image)
         img = np.expand_dims(img, axis = 0) # add one more []
-        #model accept batch size, this make single image ready to input into model
+        # model accept batch size, this make single image ready to input into model
         img = preprocess_input(img)
         return img
 
@@ -402,7 +400,7 @@ class VGGClientApp:
         # DL4j: input shape is batch size, channels, height, width
         # permute/transpose order is: 3,2,1,0 for inputs
         # permute/transpose order output:  3,2,1,0
-        #currentFaceImage = load_img(currentFaceImage, target_size = (self.imgRows, self.imgCols))
+        # currentFaceImage = load_img(currentFaceImage, target_size = (self.imgRows, self.imgCols))
         currentFaceImage_ = img_to_array(currentFaceImage)
         currentFaceImage_ = np.expand_dims(currentFaceImage_, axis = 0) # add one more []
         currentFaceImage_ = preprocess_input(currentFaceImage_)
@@ -429,8 +427,8 @@ class VGGClientApp:
             print(response.text)
             return []
         else:
-            #print('response success')
-            #print(response.status_code)
+            # print('response success')
+            # print(response.status_code)
             json_result = response.json()
             response_data = json_result['prediction']
             embeddings = response_data['data']
@@ -460,19 +458,19 @@ class VGGClientApp:
 
                     cosineNameDict[name].append(0)
 
-        currentOutput = self.getTopAverage(cosineNameDict) #self.getTopAverage(cosineNameDict)
+        currentOutput = self.getTopAverage(cosineNameDict) # self.getTopAverage(cosineNameDict)
 
         return currentOutput
 
     def getBiggestFaceIndex(self, detection):
 
-        biggestFaceIndex = -1 #FACE TOO SMALL FOR FACE RECOGNITION
+        biggestFaceIndex = -1 # FACE TOO SMALL FOR FACE RECOGNITION
         biggestFaceArea = self.minimumFaceWidth
         currentIndex = 0
 
         for det in detection:
 
-            #row and column similar. Chose column as the standard of comparison
+            # row and column similar. Chose column as the standard of comparison
             currentFaceWidth = det.bottom() - det.top()
 
             if(currentFaceWidth > biggestFaceArea):
@@ -488,12 +486,12 @@ class VGGClientApp:
         facesRectangle = []
 
         for faceDect in facesDect:
-            #print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(i, d.left(), d.top(), d.right(), d.bottom()))
+            # print("Detection {}: Left: {} Top: {} Right: {} Bottom: {}".format(i, d.left(), d.top(), d.right(), d.bottom()))
 
             topleft = 0
             top = 0
             bottom = faceDect.bottom()
-            right = 0#int(width)
+            right = 0# int(width)
 
 
             if(faceDect.left() - self.padwidth) > 0:
@@ -541,7 +539,7 @@ class VGGClientApp:
                 faceRecogIndex = self.getBiggestFaceIndex(dets)
 
                 if faceRecogIndex != -1:
-                    #endpoint
+                    # endpoint
                     singleFaceEmbedding = self.getLocalMachineEmbedding(faces_aligned[faceRecogIndex])
 
                     dictOutput = self.getMatchFace(singleFaceEmbedding)
@@ -554,12 +552,12 @@ class VGGClientApp:
 
                     if self.checkFaceConfident({outputNameList[maxIndex]: maxValue}):
 
-                        cv2.putText(frame, "%s %.2f" % (outputNameList[maxIndex], outputNameSimilarity[maxIndex] * 100), (rectList[maxIndex][3], rectList[maxIndex][0]), self.faceFontType, self.faceFontScale, self.faceFontColor)#(right, top + padY), font, fontScale, fontColor)
+                        cv2.putText(frame, "%s %.2f" % (outputNameList[maxIndex], outputNameSimilarity[maxIndex] * 100), (rectList[maxIndex][3], rectList[maxIndex][0]), self.faceFontType, self.faceFontScale, self.faceFontColor)# (right, top + padY), font, fontScale, fontColor)
 
 
 
                 for det in rectList:
-                    #[top, bottom, topleft, right] to [topleft, top, right, bottom]
+                    # [top, bottom, topleft, right] to [topleft, top, right, bottom]
                     cv2.rectangle(frame, (det[2], det[0]), (det[3], det[1]), self.faceRectColor, self.faceRectThickness)
 
                 cv2.rectangle(frame, (rectList[faceRecogIndex][2], rectList[faceRecogIndex][0]), (rectList[faceRecogIndex][3], rectList[faceRecogIndex][1]), (0, 0, 255), self.faceRectThickness)
@@ -573,7 +571,6 @@ class VGGClientApp:
         # When everything done, release the capture
         self.cap.release()
         cv2.destroyAllWindows()
-
 
     def runEndpointFaceRecognition(self):
 
@@ -605,8 +602,8 @@ class VGGClientApp:
                 faceRecogIndex = self.getBiggestFaceIndex(dets)
 
                 if faceRecogIndex != -1:
-                    #endpoint
-                    #currentFaceImage = self.colorEqualizeHist(faces_aligned[faceRecogIndex])
+                    # endpoint
+                    # currentFaceImage = self.colorEqualizeHist(faces_aligned[faceRecogIndex])
                     singleFaceForEndpoint = self.getSingleFaceForEndpoint(faces_aligned[faceRecogIndex])
                     singleFaceEmbedding = self.getEndpointEmbedding(singleFaceForEndpoint)
 
@@ -618,13 +615,13 @@ class VGGClientApp:
 
                         for name in dictOutput.keys():
 
-                            cv2.putText(frame, "%s %.2f" % (name, dictOutput[name]), (rectList[faceRecogIndex][3], rectList[faceRecogIndex][0] + padY), self.faceFontType, self.faceFontScale, self.faceFontColor)#(right, top + padY), font, fontScale, fontColor)
+                            cv2.putText(frame, "%s %.2f" % (name, dictOutput[name]), (rectList[faceRecogIndex][3], rectList[faceRecogIndex][0] + padY), self.faceFontType, self.faceFontScale, self.faceFontColor)# (right, top + padY), font, fontScale, fontColor)
 
                             padY += 20
 
 
                 for det in rectList:
-                    #[top, bottom, topleft, right] to [topleft, top, right, bottom]
+                    # [top, bottom, topleft, right] to [topleft, top, right, bottom]
                     cv2.rectangle(frame, (det[2], det[0]), (det[3], det[1]), self.faceRectColor, self.faceRectThickness)
 
                 cv2.rectangle(frame, (rectList[faceRecogIndex][2], rectList[faceRecogIndex][0]), (rectList[faceRecogIndex][3], rectList[faceRecogIndex][1]), (0, 0, 255), self.faceRectThickness)
@@ -696,9 +693,9 @@ class VGGClientApp:
         self.model.load_weights(self.kerasModelPath)
 
         self.vgg_face_descriptor = Model(inputs = self.model.layers[0].input, outputs = self.model.layers[-2].output)
-        #self.vgg_face_descriptor.save('model.h5')
+        # self.vgg_face_descriptor.save('model.h5')
 
-    #value ranging from -1 to  1 . -1 as totally ot similar to 1 as totally similar
+    # value ranging from -1 to  1 . -1 as totally ot similar to 1 as totally similar
     def getCosineSimilarity(self, source, target):
         a = np.matmul(np.transpose(source), target)
         b = np.sum(np.multiply(source, source))
@@ -711,52 +708,6 @@ if __name__ == '__main__':
 
     print("run Face Recognition Endpoint")
     faceClientApp.runEndpointFaceRecognition()
-    #faceClientApp.runLocalFaceRecognition()
+    # faceClientApp.runLocalFaceRecognition()
 
     print('End of program...')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
