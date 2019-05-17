@@ -2,3 +2,5 @@
 
 venv/
 
+resources/vgg_face_weights.h5
+notebooks/vgg_face_descriptor.h5

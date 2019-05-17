@@ -55,11 +55,11 @@ class VGGClientApp:
     inputImageWidth = -1
 
     # "http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
-    embeddingURL      = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'
-    kerasModelPath    = "resources\\vgg_face_weights.h5"
-    imageDbPath       = "resources\\singleFaceDataset\\"
-    embeddingDbPath   = "resources\\singleFaceEmbedding\\"
-    predictor_path    = "resources\\shape_predictor_68_face_landmarks.dat"
+    embeddingURL      = 'http://localhost:9008/endpoints/vgg-deployment/model/vgg-model/v1/predict'
+    kerasModelPath    = os.path.join("resources", "vgg_face_weights.h5")
+    imageDbPath       = os.path.join("resources", "singleFaceDataset")
+    embeddingDbPath   = os.path.join("resources", "singleFaceEmbedding")
+    predictor_path    = os.path.join("resources", "shape_predictor_68_face_landmarks.dat")
     
     faceFontType      = cv2.FONT_HERSHEY_SIMPLEX
     faceFontScale     = 0.8
@@ -126,7 +126,7 @@ class VGGClientApp:
             os.mkdir(pathToSave)
 
         if(self.cap.isOpened() == False):
-            self.cap = VideoCapture(self.camera)
+            self.cap = cv2.VideoCapture(self.camera)
 
         count = 0
         maxFacesCapture = 30
@@ -315,13 +315,14 @@ class VGGClientApp:
         print("Image height: " + str(height))
 
     def getToken(self):
-
-        loginURL = "http://localhost:9008/login"# "http://localhost:9008/ui/# /login?returnUrl=%2Fworkspaces"
-        headers = {"Content-Type":"application/json","Accept":"application/json"}
+        # "http://localhost:9008/ui/
+        # /login?returnUrl=%2Fworkspaces"
+        loginURL = "http://localhost:9008/login"
+        headers = {"Content-Type":"application/json", "Accept":"application/json"}
         payload = {
-        'sysparm_action': 'insert',
-        'short_description': 'test_jsonv2',
-        'priority': '1'
+            'sysparm_action': 'insert',
+            'short_description': 'test_jsonv2',
+            'priority': '1'
         }
         payload = {'userId': 'admin', 'password': self.SKILServerPassword}
         response = requests.request("POST", loginURL, data=json.dumps(payload), headers = headers)
@@ -402,7 +403,7 @@ class VGGClientApp:
         # permute/transpose order output:  3,2,1,0
         # currentFaceImage = load_img(currentFaceImage, target_size = (self.imgRows, self.imgCols))
         currentFaceImage_ = img_to_array(currentFaceImage)
-        currentFaceImage_ = np.expand_dims(currentFaceImage_, axis = 0) # add one more []
+        currentFaceImage_ = np.expand_dims(currentFaceImage_, axis=0) # add one more []
         currentFaceImage_ = preprocess_input(currentFaceImage_)
 
         currentFaceImage_ = np.array(currentFaceImage_)
@@ -417,12 +418,20 @@ class VGGClientApp:
 
     def getEndpointEmbedding(self, faceInputVector):
 
-        prediction_json = {"ordering":"c","shape":(1, self.channels, self.imgRows, self.imgCols), "data": faceInputVector}
-        payload = {"needsPreProcessing":"false","id":"25baeee4-2736-4135-8dfd-0ec168bd1976","prediction": prediction_json}
+        prediction_json = {
+            "ordering":"c",
+            "shape":(1, self.channels, self.imgRows, self.imgCols), 
+            "data": faceInputVector
+        }
+        payload = {
+            "needsPreProcessing":"false",
+            "id":"25baeee4-2736-4135-8dfd-0ec168bd1976",
+            "prediction": prediction_json
+        }
 
-        response = requests.request("POST", self.embeddingURL, data = json.dumps(payload), headers = self.embeddingHeaders)
+        response = requests.request("POST", self.embeddingURL, data=json.dumps(payload), headers=self.embeddingHeaders)
         if response.status_code != 200:
-            print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:',response.json())
+            print('Status:', response.status_code, 'Headers:', response.headers, 'Error Response:', response.json())
             print(response.content)
             print(response.text)
             return []
@@ -512,7 +521,7 @@ class VGGClientApp:
     def runLocalFaceRecognition(self):
 
         if(self.cap.isOpened() == False):
-            self.cap = VideoCapture(self.camera)
+            self.cap = cv2.VideoCapture(self.camera)
 
         while(True):
             # Capture frame-by-fram
@@ -574,13 +583,17 @@ class VGGClientApp:
 
     def runEndpointFaceRecognition(self):
 
-        if(self.cap.isOpened() == False):
-            self.cap = VideoCapture(self.camera)
+        # if(self.cap.isOpened() == False):
+            # self.cap = cv2.VideoCapture(self.camera)
+
+        self.cap = cv2.VideoCapture()
+        # Opening the link
+        self.cap.open("http://10.0.1.8:8080/video?.mjpeg")    
 
         while(True):
             # Capture frame-by-fram
             ret, frame = self.cap.read()
-
+            
             frame = cv2.flip(frame, 1)
 
             # 4. Pass de loaded image to the `detector`
