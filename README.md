@@ -13,6 +13,7 @@ Use case overview written in mandarin can be found here. https://drive.google.co
 
 ## Deployment Environment 
 The program was developed and tested in windows environment. 
+ 
 Below are the version environment. 
 Python 3.7.2
 Packages: dlib, keras, tensorflow / tensorflow-gpu, numpy, urllib, pandas
@@ -39,14 +40,17 @@ Import vggSKILServerDeploymentNotebook.txt manually and run on SKIL Workspace. M
 Run vggSKILClientSingleFaceApp or vggSKILClientMultiFacesApp.
 
 *faceClientApp = VGGClientApp(createDataBase = True)*
+
 set createDataBase = True for the first time to generate embeddings in resources\facesEmbedding or resources\singleFaceEmbedding
 Also, set it to True to get images from camera input
 
 *faceClientApp.runEndpointFaceRecognition()*
+
 Use this function to get embedding vector from endpoint.
 Set the embeddingURL as the deployed endpoint on SKIL
 
 *faceClientApp.runLocalFaceRecognition()*
+
 Use this function to get embedding vector from the same program
 
 ## How to add new faces data 

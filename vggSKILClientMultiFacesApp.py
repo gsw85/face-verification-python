@@ -56,15 +56,16 @@ class VGGClientApp:
     inputImageHeight = -1
     inputImageWidth = -1
 
-    embeddingURL = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'#"http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
+    # "http://localhost:9008//endpoints//vgg//model//vggFace//default//multipredict"
+    embeddingURL = 'http://localhost:9008/endpoints/vgg/model/vggmodel/v1/predict'
     kerasModelPath = "resources\\vgg_face_weights.h5"
     imageDbPath = "resources\\facesDataset\\"
     embeddingDbPath = "resources\\facesEmbedding\\"
-    predictor_path = "resources\\shape_predictor_68_face_landmarks.dat"
+    predictor_path = os.path.join("resources","shape_predictor_68_face_landmarks.dat")
 
     faceFontType           = cv2.FONT_HERSHEY_SIMPLEX
     faceFontScale          = 0.8
-    faceFontColor          = (255,0,0)
+    faceFontColor          = (255, 0, 0)
     faceRectColor          = (0, 255, 0)
     faceRectThickness      = 2
 
@@ -96,7 +97,6 @@ class VGGClientApp:
 
         #get endpoint token
         self.getToken()
-
 
 
     def saveFaceForDatabase(self, mainPath):
@@ -160,7 +160,7 @@ class VGGClientApp:
 
                     cv2.imwrite(savePath, faces_aligned[faceRecogIndex])
                     count += 1
-
+ 
 
                     if(count > maxFacesCapture):
                         break

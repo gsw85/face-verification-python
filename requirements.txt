@@ -1,0 +1,8 @@
+opencv_python==4.1.0.25
+requests==2.9.1
+tensorflow-gpu==1.13.1
+Keras==2.2.4
+numpy==1.16.3
+Pillow==6.0.0
+dlib==19.17.0
+pandas==0.24.2

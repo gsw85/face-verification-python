@@ -1,0 +1,9 @@
+.ipynb_checkpoints
+.vscode
+__pycache__
+venv
+
+*.pyc
+
+resources/models/vgg_face_weights.h5
+notebooks/vgg_face_descriptor.h5
