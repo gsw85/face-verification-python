@@ -14,7 +14,7 @@ import dlib
 import numpy as np
 
 # Local application imports
-from pyface import VGGFace, FaceDetector, FaceDescriptor, FaceVisualizer
+from pyface import VGGFace, FaceDetector, FaceDescriptor, FaceClassifier, FaceVisualizer
 from pyface.utils import *
 
 from flask import Flask, render_template, Response
@@ -55,52 +55,43 @@ skil_service = None
 
 detector     = FaceDetector()
 descriptor   = FaceDescriptor(skil_service)
+classifier   = FaceClassifier()
 visualizer   = FaceVisualizer()
 
 def pipeline(frame, create=False, debug=True):
     start = time.time()
-
     frame = resize_scale(frame, 600, 600)
 
     # Face Detection
-    frame, detected_faces = detection_pipeline(frame, visualize=True)
+    detected_faces = detected_faces = detector.predict(frame, model='cnn')
 
     if not detected_faces['detected']: return frame
-
     # Fece Description
     face_descriptions = descriptor.get_resnet_descriptions(frame, detected_faces)
 
     # Face Classification
-    # if create:
-    
-    # else:
-        
+    if create:
+        pass
+    else:
+        recognized_faces = classifier.predict(face_descriptions)
+
+    frame = visualizer.show_landmarks(
+        frame, 
+        detected_faces['landmark_points'],
+        recognized_faces,
+        triangles=False
+    )
 
     if debug:
         # {:>3} aligning strings to right
         print('FPS: {:>3}'.format( int(1/(time.time()-start))) )
-
     return frame
-
-    
-
-def detection_pipeline(img, visualize=True):
-    detected_faces = detector.predict(img, model='cnn')
-
-    if detected_faces['detected'] and visualize:
-        # visualizer.show_boxes(img, detected_faces['bounding_boxes'])
-        visualizer.show_landmarks(img, detected_faces['landmark_points'])
-        img = visualizer.show_triangles(img, detected_faces['landmark_points'])
-
-    return img, detected_faces
 
 def gen(camera):
     while True:
         frame = camera.get_frame()
-
         # pyFace Pipeline
         frame = pipeline(frame, create=False, debug=True)
-        
         frame = camera.to_byte(frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
@@ -108,6 +99,10 @@ def gen(camera):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/404')
+def page404():
+    return render_template('404.html')
 
 @app.route('/video_feed')
 def video_feed():
