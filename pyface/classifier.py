@@ -7,7 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier, NearestNeighbors
 
 class FaceClassifier:
 
-    SIMILARITY_THRESHOLD = 0.85
+    SIMILARITY_THRESHOLD = 0.90
     FACE_EMBEDING_PATH = os.path.join("resources", "face_database", "encoded_faces.csv")
 
     def __init__(self):
@@ -27,6 +27,36 @@ class FaceClassifier:
 
         self.fit()
 
+    def add_embedded_faces(self, face_description, person_name):
+        df_faces = pd.read_csv(self.FACE_EMBEDING_PATH)
+
+        face_description = list(face_description)
+
+        print(person_name)
+        print(face_description)
+
+        df_adding = pd.DataFrame.from_records([
+            [person_name]+face_description
+        ])
+        df_adding.columns = df_adding.columns.astype(str)
+        print(df_adding)
+
+        df_new = pd.concat([
+            df_faces,
+            df_adding
+        ], axis=0)
+
+        print(df_new)
+
+        df_new.to_csv(self.FACE_EMBEDING_PATH, index=None)
+
+        # columns are [name + 128 features]
+        self.X = df_new[df_new.columns[1:]].values
+        self.y = df_new[df_new.columns[0]].values
+
+        print(self.X.shape, self.y.shape)
+
+        self.fit()
 
     def fit(self):
         self.knn = NearestNeighbors(
@@ -43,13 +73,11 @@ class FaceClassifier:
             cosine = 1-distance[0]
             index = index[0]
 
-            print(cosine)
+            # print(cosine)
 
             if cosine < self.SIMILARITY_THRESHOLD:
-                recognized_faces[ind] = 'Unknow'
-
-            recognized_faces[ind] = self.y[index]
+                recognized_faces[ind] = 'Unknown'
+            else:
+                recognized_faces[ind] = self.y[index]
             
-            # print(predicted, distance)
-
         return recognized_faces

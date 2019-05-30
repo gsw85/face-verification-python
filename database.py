@@ -15,10 +15,8 @@ from keras.applications.imagenet_utils import preprocess_input
 from pyface import FaceDetector
 from pyface import FaceDescriptor
 
-
 FACE_DB_PATH = os.path.join("resources", "face_database")
 FACE_EMBEDING_PATH = os.path.join("resources", "face_database", "encoded_faces.csv")
-
 
 def sort_face_area(detected_faces):
     areas = []   
