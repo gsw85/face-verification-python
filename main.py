@@ -136,7 +136,8 @@ def page404():
 
 @app.route('/video_feed/<int:face_id>')
 def video_feed(face_id):
-    video_source = 'http://10.0.1.8:8080/video?.mjpeg'
+    # video_source = 'http://10.0.1.8:8080/video?.mjpeg'
+    video_source = 'http://192.168.42.129:8080/video?.mjpeg'
     return Response(
         gen(VideoCamera(video_source), face_id),
         mimetype='multipart/x-mixed-replace; boundary=frame'

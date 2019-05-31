@@ -8,7 +8,7 @@
   <!-- Page Wrapper -->
   <div id="wrapper">
 
-  {% include "slidebar.html" %}
+    {% include "slidebar.html" %}
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
@@ -24,94 +24,102 @@
           <!-- Page Heading -->
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+            <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
+                class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
           </div>
 
 
           <!-- Content Row -->
           <div class="row">
 
-              <!-- Camera -->
-              <div class="col-lg-4 mb-4">
-                
-                <div class="card shadow mb-4">
-                  <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Real-time Analytics</h6>
-                  </div>
-                  <div class="card-body">
-                    <div class="text-center px-3">
-                        <img id="bg" class="img-fluid mt-2 mb-4" src="{{ url_for('video_feed', face_id=0) }}" style="width: 100%; border-radius: 5px;" alt="">
-                    </div>
-                    <p>
-                      <strong>Facial recognition:</strong> Skymind's image recognition technology can compare the detected face
-                      to a database of known individuals and perform facial identification.
-                      The threshold for possible matches can be adjusted to suit different needs.
-                      <a target="_blank" rel="nofollow" href="https://skymind.ai/case-studies/image">see more</a>
-                    </p>
-                    <a target="_blank" rel="nofollow" href="{{ url_for('video_feed', face_id=0) }}">Open camera in new tab &rarr;</a>
-                  </div>
+            <!-- Camera -->
+            <div class="col-lg-4 mb-4">
+
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Real-time Analytics</h6>
                 </div>
-                
-              </div>
-
-
-              <!-- Mid -->
-              <div class="col-lg-4 mb-4">
-                <div class="card shadow mb-4">
-                  <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Detected Faces</h6>
+                <div class="card-body">
+                  <div class="text-center px-3">
+                    <img id="bg" class="img-fluid mt-2 mb-4" src="{{ url_for('video_feed', face_id=0) }}"
+                      style="width: 100%; border-radius: 5px;" alt="">
                   </div>
-                  <div class="card-body">
-                    <div class="text-center px-3">
-                      <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=1) }}" style="width: 160px; border-radius: 5px;" alt="">
-                      <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=2) }}" style="width: 160px; border-radius: 5px;" alt="">
-
-                      <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=3) }}" style="width: 160px; border-radius: 5px;" alt="">
-                      <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=4) }}" style="width: 160px; border-radius: 5px;" alt="">
-                      
-                    </div>
-                  </div>
+                  <p>
+                    <strong>Facial recognition:</strong> Skymind's image recognition technology can compare the detected
+                    face
+                    to a database of known individuals and perform facial identification.
+                    The threshold for possible matches can be adjusted to suit different needs.
+                    <a target="_blank" rel="nofollow" href="https://skymind.ai/case-studies/image">see more</a>
+                  </p>
+                  <a target="_blank" rel="nofollow" href="{{ url_for('video_feed', face_id=0) }}">Open camera in new tab
+                    &rarr;</a>
                 </div>
               </div>
 
-              <!-- Right -->
-              <div class="col-lg-4 mb-4">
-                  <div class="card shadow mb-4">
-                    <div class="card-header py-3">
-                      <h6 class="m-0 font-weight-bold text-primary">Detected Faces</h6>
-                    </div>
-                    <div class="card-body">
-                      <div class="text-left px-0">
-                          <form method="post" enctype="multipart/form-data">
-                            <div class="form-group">
-                                <label for="formGroupExampleInput">Face Identification</label>
-                                <input type="text" class="form-control" name="person" placeholder="Person name">
-                            </div>
-                            <div class="form-group">
-                              <div class="custom-file">
-                                  <input type="file" class="custom-file-input" id="customFile", name="file">
-                                  <label class="custom-file-label" for="customFile">Choose image</label>
-                              </div>
-                            </div>
+            </div>
 
-                            <!-- <div class="form-group">
+
+            <!-- Mid -->
+            <div class="col-lg-4 mb-4">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Detected Faces</h6>
+                </div>
+                <div class="card-body">
+                  <div class="text-center px-3">
+                    <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=1) }}"
+                      style="width: 160px; border-radius: 5px;" alt="">
+                    <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=2) }}"
+                      style="width: 160px; border-radius: 5px;" alt="">
+
+                    <!-- <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=3) }}"
+                      style="width: 160px; border-radius: 5px;" alt="">
+                    <img id="bg" class="img-fluid my-3 mx-4" src="{{ url_for('video_feed', face_id=4) }}"
+                      style="width: 160px; border-radius: 5px;" alt=""> -->
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right -->
+            <div class="col-lg-4 mb-4">
+              <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                  <h6 class="m-0 font-weight-bold text-primary">Insert Face</h6>
+                </div>
+                <div class="card-body">
+                  <div class="text-left px-0">
+                    <form method="post" enctype="multipart/form-data">
+                      <div class="form-group">
+                        <label for="formGroupExampleInput">Face Identification</label>
+                        <input type="text" class="form-control" name="person" placeholder="Person name">
+                      </div>
+                      <div class="form-group">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="customFile" , name="file">
+                          <label class="custom-file-label" for="customFile">Choose image</label>
+                        </div>
+                      </div>
+
+                      <!-- <div class="form-group">
                                 <input type="file" class="form-control-file" id="file">
                                 <label class="custom-file-label" for="customFile">Choose image</label>
                             </div> -->
-                            
-                            <button type="submit" class="btn btn-primary tex">Upload</button>
 
-                          </form>
+                      <button type="submit" class="btn btn-primary tex">Upload</button>
 
-               
+                    </form>
 
-                      </div>
-                    </div>
+
+
                   </div>
                 </div>
-
-
+              </div>
             </div>
+
+
+          </div>
 
 
           <!-- Content Row -->
@@ -125,10 +133,12 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">People Counting</h6>
                   <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
                       <div class="dropdown-header">Dropdown Header:</div>
                       <a class="dropdown-item" href="#">Action</a>
                       <a class="dropdown-item" href="#">Another action</a>
@@ -153,10 +163,12 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">Population Proportion</h6>
                   <div class="dropdown no-arrow">
-                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown"
+                      aria-haspopup="true" aria-expanded="false">
                       <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                      aria-labelledby="dropdownMenuLink">
                       <div class="dropdown-header">Dropdown Header:</div>
                       <a class="dropdown-item" href="#">Action</a>
                       <a class="dropdown-item" href="#">Another action</a>
